@@ -1257,7 +1257,7 @@
     }
 
     function getFirebaseDbUrl() {
-      return localStorage.getItem(FIREBASE_URL_KEY) || DEFAULT_FIREBASE_DB_URL;
+      return localStorage.getItem(FIREBASE_URL_KEY) || "https://guerreros-burguer-default-rtdb.firebaseio.com";
     }
 
     function initRealtimeSynchronization() {
