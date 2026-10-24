@@ -648,7 +648,7 @@
 
       <div class="flex items-center gap-2">
         <button onclick="switchAdminTab('sales')" id="adminTabBtn_sales" class="admin-tab-btn px-3.5 py-2 rounded-xl text-xs font-extrabold bg-guerrero-yellow text-black">
-          <i class="fa-solid fa-chart-line mr-1"></i> Ventas del Día (12pm-11pm)
+          <i class="fa-solid fa-chart-line mr-1"></i> Ventas del Día (7am-11pm)
         </button>
         <button onclick="switchAdminTab('menu')" id="adminTabBtn_menu" class="admin-tab-btn px-3.5 py-2 rounded-xl text-xs font-extrabold bg-white/5 text-white hover:bg-white/10">
           <i class="fa-solid fa-burger mr-1"></i> Menú y Precios
@@ -937,9 +937,9 @@
         logoUrl: ""
       },
       schedule: {
-        openHour: 12,   // 12:00 PM
+        openHour: 7,   // 12:00 PM
         closeHour: 23,  // 11:00 PM
-        closedDay: 4    // 4 = Jueves
+        closedDay: -1    // 4 = Jueves
       },
       rates: {
         copPerUsd: 0,
@@ -1367,7 +1367,7 @@
       };
 
       const closedDayNames = { "-1": "Ninguno", "1": "Lunes", "2": "Martes", "3": "Miércoles", "4": "Jueves" };
-      topText.textContent = `Horario: ${formatH(openHour)} a ${formatH(closeHour)} (Todos los días excepto ${closedDayNames[String(closedDay)] || "Jueves"})`;
+      topText.textContent = `Horario: ${formatH(openHour)} a ${formatH(closeHour)} (${Number(closedDay) === -1 ? "Todos los días" : "Todos los días excepto " + (closedDayNames[String(closedDay)] || "")})`;
 
       if (isClosedDay) {
         text.textContent = "HOY CERRADO POR DESCANSO SEMANAL";
