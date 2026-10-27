@@ -2236,7 +2236,7 @@ function printThermalTicket(tipo) {
             <div class="center" style="font-size:11px;">${fecha}</div>
             <div class="divider"></div>
             <div>${previewEl.innerHTML}</div>
-            ${notes ? `<div class="notes-box">NOTA COCINA: ${notes}</div>` : ""}
+            ${(notes && tipo === "cocina") ? `<div class="notes-box">NOTA COCINA: ${notes}</div>` : ""}
             <div class="divider"></div>
             <div class="center" style="font-size:11px; margin-top:6px;">
               ${tipo === "cocina" ? "--- FIN DE COMANDA ---" : "¡Gracias por tu compra!"}
@@ -2334,7 +2334,8 @@ function printThermalTicket(tipo) {
       }
       lines.push(`💰 *TOTAL A PAGAR: ${formatCOP(total)}*`);
 
-      const waUrl = `https://wa.me/${branch.whatsapp}?text=${encodeURIComponent(lines.join("\n"))}`;
+      const cleanText = lines.join("\n").replace(/[\uFFFD\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "").replace(/  +/g, " ");
+const waUrl = `https://wa.me/${branch.whatsapp}?text=${encodeURIComponent(cleanText)}`;
       window.open(waUrl, "_blank", "noopener,noreferrer");
 
       clearCart();
