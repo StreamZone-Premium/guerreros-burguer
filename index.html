@@ -102,7 +102,7 @@
         "name": "GUERREROS - Sede San Cristóbal",
         "address": {
           "@type": "PostalAddress",
-          "streetAddress": "Korner Nivel Feria II, al final de la avenida Los Angustinos",
+          "streetAddress": "Carrera 9 entre Calles 13 y 14, Fte. a Plaza Garbiras",
           "addressLocality": "San Cristóbal",
           "addressRegion": "Táchira",
           "addressCountry": "VE"
@@ -112,6 +112,87 @@
     ]
   }
   </script>
+ <!-- LIBRERÍA LEAFLET PARA EL MAPA DE PLAZA GARBIRAS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+  /* ESTILOS DE LA PANTALLA DE SEGUIMIENTO (ESTILO GUTES) */
+  #guerrerosTrackerModal {
+    position: fixed; inset: 0; background: #ffffff; z-index: 99999;
+    overflow-y: auto; display: none; flex-direction: column;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #111827;
+  }
+  #guerrerosTrackerModal.active { display: flex; }
+  .gt-wrap { max-width: 480px; width: 100%; margin: 0 auto; padding-bottom: 35px; }
+  .gt-top {
+    display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb; background: #fff; position: sticky; top: 0; z-index: 20;
+  }
+  .gt-logo {
+    width: 42px; height: 42px; border-radius: 10px; background: #111; color: #f59e0b;
+    display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px;
+  }
+  .gt-top-info h4 { margin: 0; font-size: 15px; font-weight: 800; color: #111; }
+  .gt-top-info p { margin: 2px 0 0; font-size: 12px; color: #6b7280; }
+  .gt-status-box { padding: 18px 16px 12px; }
+  .gt-status-box h2 { margin: 0; font-size: 24px; font-weight: 800; color: #111; }
+  .gt-status-box .gt-sub { margin: 4px 0 16px; font-size: 14px; color: #6b7280; }
+  .gt-steps {
+    display: flex; align-items: center; justify-content: space-between;
+    position: relative; margin: 12px 0 8px;
+  }
+  .gt-steps::before {
+    content: ""; position: absolute; top: 50%; left: 20px; right: 20px;
+    height: 3px; background: #e5e7eb; transform: translateY(-50%); z-index: 1;
+  }
+  .gt-step-bar {
+    position: absolute; top: 50%; left: 20px; height: 3px; background: #22c55e;
+    transform: translateY(-50%); z-index: 2; width: 0%; transition: width 0.35s ease;
+  }
+  .gt-step-dot {
+    width: 40px; height: 40px; border-radius: 50%; background: #fff;
+    border: 2px solid #e5e7eb; display: flex; align-items: center; justify-content: center;
+    z-index: 3; font-size: 16px; color: #9ca3af;
+  }
+  .gt-step-dot.active {
+    background: #22c55e; border-color: #22c55e; color: #fff;
+    box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3);
+  }
+  #gtMapContainer { width: 100%; height: 185px; background: #f3f4f6; z-index: 5; }
+  .gt-code-card {
+    margin: -22px 16px 14px; background: #fff; border: 1px solid #e5e7eb;
+    border-radius: 14px; padding: 14px; text-align: center; font-size: 18px;
+    font-weight: 800; box-shadow: 0 4px 14px rgba(0,0,0,0.06); position: relative; z-index: 10;
+  }
+  .gt-block { padding: 14px 16px; border-bottom: 1px solid #e5e7eb; }
+  .gt-items-collapse { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e5e7eb; font-size: 14px; }
+  .gt-items-collapse.open { display: block; }
+  .gt-badge-unpaid { background: #fef3c7; color: #92400e; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 8px; }
+  .gt-badge-paid { background: #dcfce7; color: #166534; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 8px; }
+  .gt-actions { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+  .gt-mandatory-banner {
+    background: #fffbeb; border: 1px solid #f59e0b; color: #92400e;
+    padding: 10px 12px; border-radius: 10px; font-size: 13px; font-weight: 600;
+  }
+  .gt-btn-primary {
+    background: #1c1917; color: #fff; border: none; border-radius: 28px;
+    padding: 14px 20px; font-size: 15px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .gt-btn-primary.pulse { animation: gtPulse 1.6s infinite; }
+  @keyframes gtPulse {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); }
+    70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  }
+  .gt-btn-secondary {
+    background: #fff; color: #1c1917; border: 1.5px solid #d1d5db; border-radius: 28px;
+    padding: 13px 20px; font-size: 15px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+</style>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-guerrero-yellow selection:text-black">
 
@@ -218,7 +299,7 @@
               <button id="heroBtnSanCristobal" onclick="changeSelectedBranch('sancristobal')" class="flex items-center justify-between p-3 rounded-xl border-2 transition font-bold text-left">
                 <div>
                   <span class="block text-sm font-extrabold">Sede San Cristóbal</span>
-                  <span class="block text-[11px] opacity-75">Korner Nivel Feria II</span>
+                  <span class="block text-[11px] opacity-75">Carrera 9 entre Calles 13 y 14, Fte. a Plaza Garbiras</span>
                 </div>
                 <i class="fa-solid fa-circle-check text-lg"></i>
               </button>
@@ -380,7 +461,7 @@
         <h3 class="text-white font-bold uppercase text-xs tracking-wider mb-3">Contacto por Sede</h3>
         <ul class="space-y-2 text-xs">
           <li><strong class="text-guerrero-yellow">La Grita:</strong> Calle 3, a pocos metros de la Plaza Sucre (+58 424-7273294)</li>
-          <li><strong class="text-guerrero-yellow">San Cristóbal:</strong> Korner Nivel Feria II, final Av. Los Angustinos (+58 414-1756383)</li>
+          <li><strong class="text-guerrero-yellow">San Cristóbal:</strong> Carrera 9 entre Calles 13 y 14, Fte. a Plaza Garbiras, final Av. Los Angustinos (+58 414-1756383)</li>
           <li>
             <a href="https://www.instagram.com/guerrerosburger1/" target="_blank" rel="noopener" class="text-white hover:text-guerrero-yellow inline-flex items-center gap-1.5 mt-1">
               <i class="fa-brands fa-instagram text-guerrero-yellow"></i> @guerrerosburger1
@@ -495,7 +576,7 @@
           </label>
           <select id="cartBranchSelect" onchange="changeSelectedBranch(this.value)" class="w-full bg-guerrero-card border border-guerrero-border rounded-xl px-3.5 py-2.5 text-sm font-bold text-white focus:border-guerrero-yellow focus:outline-none">
             <option value="lagrita">Sede La Grita — Calle 3, cerca de Plaza Sucre (+58 424-7273294)</option>
-            <option value="sancristobal">Sede San Cristóbal — Korner Nivel Feria II (+58 414-1756383)</option>
+            <option value="sancristobal">Sede San Cristóbal — Carrera 9 entre Calles 13 y 14, Fte. a Plaza Garbiras (+58 414-1756383)</option>
           </select>
         </div>
 
@@ -969,7 +1050,7 @@
           id: "sancristobal",
           name: "Sede San Cristóbal",
           city: "San Cristóbal, estado Táchira, Venezuela",
-          address: "Korner Nivel Feria II, al final de la avenida Los Angustinos.",
+          address: "Carrera 9 entre Calles 13 y 14, Fte. a Plaza Garbiras.",
           phoneDisplay: "+58 414-1756383",
           whatsapp: "584141756383",
           mapQuery: "https://www.google.com/maps/search/?api=1&query=Avenida+Los+Agustinos+San+Cristobal+Tachira+Venezuela",
@@ -2336,7 +2417,21 @@ function printThermalTicket(tipo) {
 
       const cleanText = lines.join("\n").replace(/[\uFFFD\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "").replace(/  +/g, " ");
 const waUrl = `https://wa.me/${branch.whatsapp}?text=${encodeURIComponent(cleanText)}`;
-      window.open(waUrl, "_blank", "noopener,noreferrer");
+      // Abrir pantalla de seguimiento estilo Gutes con el mapa de Plaza Garbiras
+abrirSeguimientoGuerreros({
+  orderNumber: typeof orderCounter !== 'undefined' ? orderCounter : Math.floor(10 + Math.random() * 89),
+  clientName: document.querySelector('#clientName, #nombreCliente, #customerName')?.value || 'Cliente',
+  clientPhone: document.querySelector('#clientPhone, #telefonoCliente, #customerPhone')?.value || '',
+  serviceType: document.querySelector('input[name="deliveryType"]:checked, #tipoServicio')?.value || 'Para llevar',
+  address: document.querySelector('#clientAddress, #direccionCliente, #customerAddress')?.value || '',
+  paymentMethod: document.querySelector('#paymentMethod, #metodoPago')?.value || 'Efectivo',
+  currency: '$ COP',
+  total: typeof cartTotal !== 'undefined' ? cartTotal : (typeof total !== 'undefined' ? total : 0),
+  subtotal: typeof cartSubtotal !== 'undefined' ? cartSubtotal : (typeof subtotal !== 'undefined' ? subtotal : 0),
+  deliveryFee: typeof deliveryCost !== 'undefined' ? deliveryCost : 0,
+  amountReceived: Number(document.querySelector('#montoPaga, #cashAmount')?.value) || (typeof cartTotal !== 'undefined' ? cartTotal : 0),
+  items: typeof cart !== 'undefined' ? cart : (typeof carrito !== 'undefined' ? carrito : [])
+});
 
       clearCart();
       closeOrderSummaryPreview();
@@ -2478,62 +2573,146 @@ function printAdminOrder(orderId, tipo) {
           <head>
             <title>${titulo}</title>
             <style>
-              @page { margin: 0; }
-              body {
-                font-family: 'Courier New', monospace;
-                width: 58mm;
-                margin: 0;
-                padding: 4mm;
-                color: #000;
-                background: #fff;
-                font-size: ${esCocina ? "13px" : "12px"};
-                line-height: 1.3;
-              }
-              .center { text-align: center; }
-              .bold { font-weight: bold; }
-              .divider { border-top: 1px dashed #000; margin: 6px 0; }
-              .notes-box { border: 2px solid #000; padding: 4px; margin-top: 6px; font-weight: bold; font-size: 13px; }
-              * { color: #000 !important; background: transparent !important; }
-            </style>
-          </head>
-          <body>
-            <div class="center bold" style="font-size:16px;">${titulo}</div>
-            <div class="center">${subtitulo}</div>
-            <div class="center" style="font-size:11px;">${fechaHora}</div>
-            <div class="center bold" style="font-size:13px; margin-top:3px;">ID: ${o.id}</div>
-            <div class="divider"></div>
-            
-            <p style="margin:2px 0;"><b>Sede:</b> ${o.branchName || 'Sede La Grita'}</p>
-            <p style="margin:2px 0;"><b>Cliente:</b> ${o.customerName || 'Cliente en Caja'}</p>
-            ${o.customerPhone ? `<p style="margin:2px 0;"><b>Tel:</b> ${o.customerPhone}</p>` : ''}
-            ${!esCocina ? `<p style="margin:2px 0;"><b>Pago:</b> ${o.paymentMethod || 'Efectivo'}</p>` : ''}
-            
-            <div class="divider"></div>
-            <div class="bold" style="margin-bottom:4px;">${esCocina ? 'PREPARAR:' : 'PRODUCTOS:'}</div>
-            ${itemsHtml}
-            <div class="divider"></div>
+        @page { margin: 0; }
+        * { color: #000 !important; background: transparent !important; box-sizing: border-box; }
+        body {
+          font-family: 'Helvetica Neue', Arial, sans-serif;
+          width: 58mm;
+          margin: 0;
+          padding: 3mm 2mm 6mm 2mm;
+          font-size: ${esCocina ? '13px' : '11px'};
+          line-height: 1.3;
+        }
+        .brand-epico {
+          text-align: center;
+          font-size: 22px;
+          font-weight: 900;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+          margin: 0 0 2px 0;
+        }
+        .sub-epico {
+          text-align: center;
+          font-size: 10px;
+          margin: 0 0 2px 0;
+          color: #111;
+        }
+        .type-epico {
+          text-align: center;
+          font-size: 10px;
+          font-weight: 800;
+          text-transform: uppercase;
+          margin: 0 0 6px 0;
+        }
+        .meta-box {
+          font-size: 11px;
+          margin: 4px 0;
+        }
+        .meta-box p {
+          margin: 1px 0;
+        }
+        .divider-dots {
+          border: none;
+          border-top: 1px dotted #000;
+          margin: 6px 0;
+        }
+        .service-mode {
+          font-size: 12px;
+          font-weight: 900;
+          text-transform: uppercase;
+          margin: 3px 0;
+        }
+        .item-list {
+          font-size: 11px;
+        }
+        .total-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          font-size: 15px;
+          font-weight: 900;
+          margin: 6px 0 4px;
+        }
+        .pay-row {
+          display: flex;
+          justify-content: space-between;
+          font-size: 11px;
+          margin: 2px 0;
+        }
+        .notes-box {
+          border-top: 1px dotted #000;
+          padding-top: 4px;
+          margin-top: 6px;
+          font-weight: 800;
+          font-size: 11px;
+        }
+        .thanks-box {
+          text-align: center;
+          font-size: 11px;
+          margin: 8px 0;
+        }
+        .footer-epico {
+          display: flex;
+          justify-content: space-between;
+          font-size: 10px;
+          font-weight: 700;
+          margin-top: 6px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="brand-epico">GUERREROS</div>
+      <div class="sub-epico">Guerreros Burguer - Plaza Garbiras</div>
+      <div class="type-epico">${esCocina ? 'COMANDA DE COCINA' : 'Recibo de compra'}</div>
 
-            ${!esCocina ? `
-              <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:14px; margin:4px 0;">
-                <span>TOTAL:</span>
-                <span>$${o.total || '0'}</span>
-              </div>
-              <div class="divider"></div>
-            ` : ''}
+      <div class="meta-box">
+        <p><strong>Pedido:</strong> ${o.customerName || 'Cliente'}</p>
+        ${o.customerPhone ? `<p><strong>Teléfono:</strong> ${o.customerPhone}</p>` : ''}
+        <p><strong>TPV:</strong> Dispositivo Guerreros 1</p>
+      </div>
 
-            ${o.notes ? `<div class="notes-box">NOTA COCINA: ${o.notes}</div><div class="divider"></div>` : ''}
+      <hr class="divider-dots" />
+      <div class="service-mode">${(o.branchName && o.branchName.toUpperCase().includes('DELIVERY')) ? 'DELIVERY' : 'LO BUSCAN'}</div>
+      ${o.customerAddress ? `<div style="font-size:10px; margin-top:2px;">Dir: ${o.customerAddress}</div>` : ''}
+      <hr class="divider-dots" />
 
-            <div class="center" style="font-size:11px; margin-top:6px;">
-              ${esCocina ? "--- FIN DE COMANDA ---" : "¡Gracias por su compra!"}
-            </div>
-            <br><br><br>
-            <script>
-              window.onload = function() {
-                window.print();
-                setTimeout(function() { window.close(); }, 500);
-              };
-            <\/script>
-          </body>
+      <div class="item-list">
+        ${itemsHtml}
+      </div>
+
+      <hr class="divider-dots" />
+
+      ${!esCocina ? `
+        <div class="total-row">
+          <span>Total</span>
+          <span>${o.total || '$0'}</span>
+        </div>
+        <div class="pay-row">
+          <span>${o.paymentMethod || 'Efectivo'}</span>
+          <span>${o.total || '$0'}</span>
+        </div>
+        <hr class="divider-dots" />
+        <div class="thanks-box">¡Gracias por preferirnos!</div>
+      ` : `
+        <div style="text-align:center; font-weight:900; font-size:12px; margin:4px 0;">
+          --- PREPARAR EN COCINA ---
+        </div>
+      `}
+
+      ${(o.notes && esCocina) ? `<div class="notes-box">⚠️ NOTA COCINA: ${o.notes}</div>` : ''}
+
+      <div class="footer-epico">
+        <span>${fechaHora}</span>
+        <span>${esCocina ? '#COCINA' : '#1-2810'}</span>
+      </div>
+
+      <script>
+        window.onload = function() {
+          window.print();
+          setTimeout(function() { window.close(); }, 500);
+        };
+      <\/script>
+    </body>
           </html>
         `);
         win.document.close();
@@ -2964,4 +3143,224 @@ function printAdminOrder(orderId, tipo) {
     });
   </script>
 </body>
+  <!-- MODAL DE SEGUIMIENTO DE PEDIDO (ESTILO GUTES) -->
+<div id="guerrerosTrackerModal">
+  <div class="gt-wrap">
+    <div class="gt-top">
+      <div class="gt-logo">G</div>
+      <div class="gt-top-info">
+        <h4>GUERREROS BURGUER - Plaza Garbiras</h4>
+        <p>📍 Carrera 9 entre Calles 13 y 14, San Cristóbal</p>
+      </div>
+    </div>
+
+    <div class="gt-status-box">
+      <h2>Recibimos tu pedido</h2>
+      <p class="gt-sub" id="gtShortNum">Pedido #1</p>
+      <div class="gt-steps">
+        <div class="gt-step-bar" id="gtStepBar"></div>
+        <div class="gt-step-dot active" id="gtDot1">✓</div>
+        <div class="gt-step-dot" id="gtDot2">🍴</div>
+        <div class="gt-step-dot" id="gtDot3">🏪</div>
+        <div class="gt-step-dot" id="gtDot4">✓</div>
+      </div>
+      <div style="font-size:13px; font-weight:700;" id="gtStatusLabel">Aceptado</div>
+    </div>
+
+    <div id="gtMapContainer"></div>
+
+    <div class="gt-code-card" id="gtFullCode">#1 • VE-0000000000</div>
+
+    <div class="gt-block">
+      <p style="margin:0 0 6px; font-weight:700; font-size:15px;" id="gtMaskedClient">Clie*** • +58 ******0000</p>
+      <p style="margin:0; font-size:14px; font-weight:700; color:#1f2937;">
+        GUERREROS BURGUER - Local 13-37, Carrera 9 entre calles 13 y 14, frente a la Plaza Garbiras, San Cristóbal 5001, Táchira, Venezuela
+      </p>
+    </div>
+
+    <div class="gt-block">
+      <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="document.getElementById('gtItemsCollapse').classList.toggle('open')">
+        <div>
+          <div style="font-size:13px; color:#6b7280;">Resumen del pedido</div>
+          <div style="font-size:15px; font-weight:700;" id="gtSummaryHeader">1 producto • $ 0,00</div>
+        </div>
+        <span style="font-size:18px;">⌄</span>
+      </div>
+      <div class="gt-items-collapse" id="gtItemsCollapse"></div>
+    </div>
+
+    <div class="gt-block">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:13px; color:#6b7280;">Método de pago</div>
+          <div style="font-size:15px; font-weight:700;" id="gtPaymentInfo">Efectivo • $ 0,00</div>
+        </div>
+        <span class="gt-badge-unpaid" id="gtPayBadge">No pagado</span>
+      </div>
+      <div style="margin-top:6px; font-size:14px; color:#374151; display:none;" id="gtChangeInfo">Vuelto $ 0,00</div>
+    </div>
+
+    <div class="gt-actions">
+      <div class="gt-mandatory-banner" id="gtMandatoryBanner">
+        ⚠️ <strong>Acción necesaria:</strong> Envía el resumen al WhatsApp del negocio para procesar tu pedido.
+      </div>
+      <button type="button" class="gt-btn-primary pulse" id="gtBtnSendSummary">
+        💬 Enviar resumen al negocio
+      </button>
+      <button type="button" class="gt-btn-secondary" id="gtBtnConsultOrder">
+        💬 Consultar sobre tu pedido
+      </button>
+      <button type="button" onclick="cerrarSeguimientoGuerreros()" style="margin-top:6px; background:none; border:none; color:#6b7280; font-size:13px; text-decoration:underline; cursor:pointer;">
+        Volver al menú
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let gtLeafletMap = null;
+  let gtSentToWa = false;
+  let gtCurrentOrder = null;
+
+  function abrirSeguimientoGuerreros(orderData) {
+    gtSentToWa = false;
+    const shortNum = orderData.orderNumber || Math.floor(10 + Math.random() * 89);
+    const veCode = orderData.veCode || ('VE-' + Math.floor(1000000000 + Math.random() * 9000000000));
+    const clientName = orderData.clientName || 'Cliente';
+    const clientPhone = orderData.clientPhone || '';
+    const items = orderData.items || [];
+    const total = Number(orderData.total || 0);
+    const subtotal = Number(orderData.subtotal || total);
+    const deliveryFee = Number(orderData.deliveryFee || 0);
+    const received = Number(orderData.amountReceived || total);
+    const change = Math.max(0, received - total);
+    const currency = orderData.currency || '$';
+    const payMethod = orderData.paymentMethod || 'Efectivo';
+    const serviceType = orderData.serviceType || 'Para llevar';
+    const whatsappPhone = '584247139330';
+
+    gtCurrentOrder = { ...orderData, shortNum, veCode, whatsappPhone };
+    window.lastOrderData = gtCurrentOrder;
+
+    // Enmascaramiento de nombre y teléfono idéntico al video de Gutes
+    const maskedName = clientName.trim().split(/\s+/).map(w => w.length <= 3 ? w + '*' : w.slice(0, 4) + '***').join(' ');
+    const cleanPhone = clientPhone.replace(/\D/g, '');
+    const maskedPhone = '+58 ******' + (cleanPhone.slice(-5) || '00000');
+
+    document.getElementById('gtShortNum').textContent = `Pedido #${shortNum}`;
+    document.getElementById('gtFullCode').textContent = `#${shortNum} • ${veCode}`;
+    document.getElementById('gtMaskedClient').textContent = `${maskedName} • ${maskedPhone}`;
+
+    const totalItems = items.reduce((acc, it) => acc + Number(it.quantity || it.cantidad || 1), 0);
+    document.getElementById('gtSummaryHeader').textContent = `${totalItems} ${totalItems === 1 ? 'producto' : 'productos'} • ${currency} ${total.toFixed(2).replace('.', ',')}`;
+
+    document.getElementById('gtItemsCollapse').innerHTML = items.map(it => {
+      const q = Number(it.quantity || it.cantidad || 1);
+      const p = Number(it.price || it.precio || 0);
+      const n = it.name || it.nombre || 'Producto';
+      return `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+        <span><b>x${q}</b> ${n}</span>
+        <span>${currency} ${(q * p).toFixed(2).replace('.', ',')}</span>
+      </div>`;
+    }).join('');
+
+    document.getElementById('gtPaymentInfo').textContent = `${payMethod} • ${currency} ${received.toFixed(2).replace('.', ',')}`;
+    const changeEl = document.getElementById('gtChangeInfo');
+    if (change > 0) {
+      changeEl.style.display = 'block';
+      changeEl.textContent = `Vuelto ${currency} ${change.toFixed(2).replace('.', ',')}`;
+    } else {
+      changeEl.style.display = 'none';
+    }
+
+    // Botón 1: Enviar resumen obligatorio al WhatsApp del negocio
+    document.getElementById('gtBtnSendSummary').onclick = function() {
+      gtSentToWa = true;
+      document.getElementById('gtBtnSendSummary').classList.remove('pulse');
+      document.getElementById('gtMandatoryBanner').style.display = 'none';
+
+      const now = new Date();
+      const fechaStr = now.toLocaleDateString('es-VE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const horaStr = now.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+      const prodLines = items.map(it => {
+        const q = Number(it.quantity || it.cantidad || 1);
+        const p = Number(it.price || it.precio || 0);
+        const n = (it.name || it.nombre || 'PRODUCTO').toUpperCase();
+        return `*X${q} ${n} ${currency} ${(q * p).toFixed(2).replace('.', ',')}*`;
+      }).join('\n');
+
+      const payDetail = change > 0
+        ? `${payMethod} ${total.toFixed(2)} (monto recibido ${received}, vuelto ${change.toFixed(2)})`
+        : `${payMethod} ${total.toFixed(2)}`;
+
+      const msg = [
+        `👋 Vengo de ${window.location.origin}`,
+        `${veCode}`,
+        `🗓️ ${fechaStr} 🕒 ${horaStr}`,
+        ``,
+        `*Tipo de servicio: ${serviceType}*`,
+        ``,
+        `Nombre: ${clientName}`,
+        `Teléfono: ${clientPhone}`,
+        ...(orderData.address ? [`Dirección: ${orderData.address}`] : []),
+        ``,
+        `🧾 *Productos*`,
+        prodLines,
+        ``,
+        `Subtotal: ${currency} ${subtotal.toFixed(2).replace('.', ',')}`,
+        `Entrega: ${currency} ${deliveryFee.toFixed(2).replace('.', ',')}`,
+        `*Total: ${currency} ${total.toFixed(2).replace('.', ',')}*`,
+        ``,
+        `💳 *Pago*`,
+        `Estado del pago: No pagado`,
+        `*Total a pagar: ${currency} ${total.toFixed(2).replace('.', ',')}*`,
+        payDetail,
+        ``,
+        `👆 Envíanos este mensaje ahora. En cuanto lo recibamos estaremos atendiéndole.`
+      ].join('\n');
+
+      window.open(`https://wa.me/${whatsappPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+    };
+
+    // Botón 2: Consultar avance del pedido
+    document.getElementById('gtBtnConsultOrder').onclick = function() {
+      const msg = `Por favor, quisiera información sobre el avance de mi pedido N° ${veCode}. Gracias.`;
+      window.open(`https://wa.me/${whatsappPhone}?text=${encodeURIComponent(msg)}`, '_blank');
+    };
+
+    document.getElementById('guerrerosTrackerModal').classList.add('active');
+
+    // Inicializa el mapa centrado frente a la Plaza Garbiras
+    setTimeout(() => {
+      const lat = 7.77185, lng = -72.22485;
+      if (!gtLeafletMap) {
+        gtLeafletMap = L.map('gtMapContainer', { zoomControl: false }).setView([lat, lng], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap'
+        }).addTo(gtLeafletMap);
+        const storeIcon = L.divIcon({
+          className: 'gt-pin',
+          html: '<div style="background:#111;color:#fff;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.4);">🏪</div>',
+          iconSize: [34, 34],
+          iconAnchor: [17, 17]
+        });
+        L.marker([lat, lng], { icon: storeIcon }).addTo(gtLeafletMap);
+      } else {
+        gtLeafletMap.invalidateSize();
+        gtLeafletMap.setView([lat, lng], 16);
+      }
+    }, 150);
+  }
+
+  function cerrarSeguimientoGuerreros() {
+    if (!gtSentToWa) {
+      if (confirm('⚠️ Aún no has enviado el resumen al WhatsApp del negocio. ¿Enviar ahora para que preparen tu pedido?')) {
+        document.getElementById('gtBtnSendSummary').click();
+        return;
+      }
+    }
+    document.getElementById('guerrerosTrackerModal').classList.remove('active');
+  }
+</script>
 </html>
