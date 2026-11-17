@@ -3204,9 +3204,9 @@ function printAdminOrder(orderId, tipo) {
         : `${payMethod} ${total.toFixed(2)}`;
 
       const msg = [
-        `👋 Vengo de ${window.location.origin}`,
+        ` Vengo de ${window.location.origin}`,
         `${veCode}`,
-        `🗓️ ${fechaStr} 🕒 ${horaStr}`,
+        ` ${fechaStr}  ${horaStr}`,
         ``,
         `*Tipo de servicio: ${serviceType}*`,
         ``,
@@ -3214,19 +3214,19 @@ function printAdminOrder(orderId, tipo) {
         `Teléfono: ${clientPhone}`,
         ...(orderData.address ? [`Dirección: ${orderData.address}`] : []),
         ``,
-        `🧾 *Productos*`,
+        ` *Productos*`,
         prodLines,
         ``,
         `Subtotal: ${currency} ${subtotal.toFixed(2).replace('.', ',')}`,
         `Entrega: ${currency} ${deliveryFee.toFixed(2).replace('.', ',')}`,
         `*Total: ${currency} ${total.toFixed(2).replace('.', ',')}*`,
         ``,
-        `💳 *Pago*`,
+        ` *Pago*`,
         `Estado del pago: No pagado`,
         `*Total a pagar: ${currency} ${total.toFixed(2).replace('.', ',')}*`,
         payDetail,
         ``,
-        `👆 Envíanos este mensaje ahora. En cuanto lo recibamos estaremos atendiéndole.`
+        ` Envíanos este mensaje ahora. En cuanto lo recibamos estaremos atendiéndole.`
       ].join('\n');
 
       window.open(`https://wa.me/${whatsappPhone}?text=${encodeURIComponent(msg)}`, '_blank');
