@@ -3140,7 +3140,7 @@ function printAdminOrder(orderId, tipo) {
     const items = orderData.items || [];
     const total = Number(orderData.total || 0);
     const subtotal = Number(orderData.subtotal || total);
-    const deliveryFee = Number(orderData.deliveryFee || 5000);
+    const deliveryFee = Number(orderData.deliveryFee || 0);
     const received = Number(orderData.amountReceived || total);
     const change = Math.max(0, received - total);
     const currency = orderData.currency || '$';
