@@ -3164,7 +3164,7 @@ function printAdminOrder(orderId, tipo) {
 
     document.getElementById('gtShortNum').textContent = `Pedido #${shortNum}`;
     document.getElementById('gtFullCode').textContent = `#${shortNum} • ${veCode}`;
-    document.getElementById('gtMaskedClient').textContent = `${maskedName} • ${maskedPhone}`;
+    document.getElementById('gtMaskedClient').textContent = orderData.clientName + ' • ' + orderData.clientPhone;
 
     const totalItems = items.reduce((acc, it) => acc + Number(it.quantity || it.cantidad || 1), 0);
     document.getElementById('gtSummaryHeader').textContent = `${totalItems} ${totalItems === 1 ? 'producto' : 'productos'} • ${currency} ${total.toFixed(2).replace('.', ',')}`;
