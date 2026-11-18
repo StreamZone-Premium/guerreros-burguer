@@ -3081,7 +3081,7 @@ function printAdminOrder(orderId, tipo) {
     <div class="gt-code-card" id="gtFullCode">#1 • VE-0000000000</div>
 
     <div class="gt-block">
-      <p style="margin:0 0 6px; font-weight:700; font-size:15px;" id="gtMaskedClient">Clie*** • +58 ******0000</p>
+      <p style="margin:0 0 6px; font-weight:700; font-size:15px;" id="gtMaskedClient"></p>
       <p style="margin:0; font-size:14px; font-weight:700; color:#1f2937;">
         GUERREROS BURGUER - Local 13-37, Carrera 9 entre calles 13 y 14, frente a la Plaza Garbiras, San Cristóbal 5001, Táchira, Venezuela
       </p>
@@ -3137,6 +3137,7 @@ function printAdminOrder(orderId, tipo) {
     const veCode = orderData.veCode || ('VE-' + Math.floor(1000000000 + Math.random() * 9000000000));
     const clientName = orderData.clientName || 'Cliente';
     const clientPhone = orderData.clientPhone || '';
+    document.getElementById('gtMaskedClient').innerText = clientName + ' • ' + clientPhone;
     const items = orderData.items || [];
     const total = Number(orderData.total || 0);
     const subtotal = Number(orderData.subtotal || total);
